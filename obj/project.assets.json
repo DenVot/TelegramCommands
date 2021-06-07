@@ -4712,7 +4712,7 @@
     "version": "1.0.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\Денис\\source\\repos\\TelegramExtensions\\TelegramCommandsExtension.csproj",
-      "projectName": "TelegramCommandsExtension",
+      "projectName": "TelegramCommands",
       "projectPath": "C:\\Users\\Денис\\source\\repos\\TelegramExtensions\\TelegramCommandsExtension.csproj",
       "packagesPath": "C:\\Users\\Денис\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Денис\\source\\repos\\TelegramExtensions\\obj\\",

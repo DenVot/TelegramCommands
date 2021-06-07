@@ -11,11 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("TelegramCommandsExtension")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("DenVot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyDescriptionAttribute("Help you to create commands for your Telegram bot.")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
-[assembly: System.Reflection.AssemblyProductAttribute("TelegramCommandsExtension")]
+[assembly: System.Reflection.AssemblyProductAttribute("TelegramCommands")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TelegramCommandsExtension")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 

@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>TelegramCommands</PackageId>
+    <Authors>DenVot</Authors>
+    <Product>TelegramCommands</Product>
+    <Description>Help you to create commands for your Telegram bot.</Description>
+    <PackageLicenseExpression>MIT License</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

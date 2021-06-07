@@ -1,9 +1,0 @@
-C:\Users\Денис\source\repos\TelegramExtensions\bin\Debug\netcoreapp3.1\TelegramCommandsExtension.deps.json
-C:\Users\Денис\source\repos\TelegramExtensions\bin\Debug\netcoreapp3.1\TelegramCommandsExtension.dll
-C:\Users\Денис\source\repos\TelegramExtensions\bin\Debug\netcoreapp3.1\TelegramCommandsExtension.pdb
-C:\Users\Денис\source\repos\TelegramExtensions\obj\Debug\netcoreapp3.1\TelegramCommandsExtension.AssemblyInfoInputs.cache
-C:\Users\Денис\source\repos\TelegramExtensions\obj\Debug\netcoreapp3.1\TelegramCommandsExtension.AssemblyInfo.cs
-C:\Users\Денис\source\repos\TelegramExtensions\obj\Debug\netcoreapp3.1\TelegramCommandsExtension.csproj.CoreCompileInputs.cache
-C:\Users\Денис\source\repos\TelegramExtensions\obj\Debug\netcoreapp3.1\TelegramCommandsExtension.dll
-C:\Users\Денис\source\repos\TelegramExtensions\obj\Debug\netcoreapp3.1\TelegramCommandsExtension.pdb
-C:\Users\Денис\source\repos\TelegramExtensions\obj\Debug\netcoreapp3.1\TelegramCommandsExtension.csproj.AssemblyReference.cache

@@ -1,4 +1,8 @@
-﻿# Telegram commands.
+﻿<p align="center">
+    <img src="Branding/logo.jpg">
+</p>
+
+# Telegram commands.
 
 Extension of `Telegram.Bot` can help you to make your commands faster. New namespace `Telegram.Bot.Commands` contains classes and interface that can execute your command.
 

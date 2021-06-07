@@ -6,11 +6,30 @@
     <Authors>DenVot</Authors>
     <Product>TelegramCommands</Product>
     <Description>Help you to create commands for your Telegram bot.</Description>
-    <PackageLicenseExpression>MIT License</PackageLicenseExpression>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/DenVot/TelegramCommands</PackageProjectUrl>
+    <PackageIcon>logo.jpg</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryUrl>https://github.com/DenVot/TelegramCommands</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>Telegram Bot</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Telegram.Bot" Version="15.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Branding\logo.jpg">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

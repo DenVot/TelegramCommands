@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Telegram.Bot.Commands
         /// <summary>
         /// Initilize new instance of <see cref="CommandsService"/>.
         /// </summary>
-        /// <param name="client">Telegram client.</param>
+        /// <param name="client">Telegram client.</param>        
         public CommandsService(ITelegramBotClient client)
         {
             client.OnMessage += Client_OnMessage;
@@ -24,23 +25,38 @@ namespace Telegram.Bot.Commands
         }
 
         private Type executorType = null;
+        private IServiceProvider provider = null;
+        private bool slashCommands = true;
+
         private readonly ITelegramBotClient client;
 
         /// <summary>
         /// Register commands.
         /// </summary>
+        /// <param name="services">Provider that contains params for constructor.</param>
         /// <typeparam name="T">Class that has void-s with <see cref="Attributes.CommandAttribute"/>.</typeparam>
-        public void RegisterCommands<T>() where T : CommandsBase
+        public void RegisterCommands<T>(IServiceProvider services = null, bool slash = true) where T : CommandsBase
         {
             var type = typeof(T);
             CommandParser.GetCommandsMethods(type); //Validation of commands
-            executorType = type;
+            executorType = type;            
+            if (services == null)
+                provider = new ServiceCollection()
+                    .BuildServiceProvider();
+            else
+                provider = services;
+
+            var validate = CommandParser.ValidateConstructors(executorType, provider, out _);
+            if (!validate)
+                throw new InvalidOperationException("Can't find constructor with parameters.");
+
+            slashCommands = slash;
         }
 
         /// <summary>
         /// Upload commands to Telegram.
         /// </summary>        
-        public async Task UploadCommands()
+        public async Task UploadCommandsAsync()
         {
             var list = new List<BotCommand>();
 
@@ -63,11 +79,11 @@ namespace Telegram.Bot.Commands
                 var context = new CommandContext(client, e.Message.Chat, e.Message.From, e.Message);
                 var commands = CommandParser.GetCommands(executorType);
 
-                if (commands.Any(x => "/" + x.Name.ToLower() == e.Message.Text))
+                if ((commands.Any(x => "/" + x.Name.ToLower() == e.Message.Text) && slashCommands) || (commands.Any(x => x.Name.ToLower() == e.Message.Text) && !slashCommands))
                 {
                     var command = commands.FirstOrDefault(x => "/" + x.Name.ToLower() == e.Message.Text);
-
-                    command.Execute(context);
+                    CommandParser.GetConstructorBuildData(executorType, provider, out object[] parameters);
+                    command.Execute(context, parameters);
                 }
             }
         }

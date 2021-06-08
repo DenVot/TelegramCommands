@@ -26,7 +26,7 @@ namespace QuickStart
             var service = new CommandsService(botClient); //Initlize instance service.
 
             service.RegisterCommands<Commands>(); //Register your commands.
-            service.UploadCommands().GetAwaiter().GetResult(); //Upload your commands to Telegram.
+            service.UploadCommandsAsync().GetAwaiter().GetResult(); //Upload your commands to Telegram.
 
             botClient.StartReceiving();
 

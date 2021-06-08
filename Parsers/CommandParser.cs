@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Telegram.Bot.Attributes;
 
@@ -31,6 +32,70 @@ namespace Telegram.Bot.Commands.Parsers
         }
 
         public static IEnumerable<MethodInfo> GetCommandsMethods<T>() => GetCommandsMethods(typeof(T));
+
+        public static bool ValidateConstructors(Type type, IServiceProvider provider, out ConstructorInfo potentConstructor)
+        {            
+            List<ConstructorInfo> constructors = new List<ConstructorInfo>();
+
+            foreach (var constructor in type.GetConstructors())
+            {
+                var parameters = constructor.GetParameters();
+                bool canBe = true;
+
+                foreach (var param in parameters)
+                {
+                    var paramType = param.ParameterType;
+                    if (provider.GetService(paramType) == null)
+                        canBe = false;
+                }
+                if (canBe)
+                    constructors.Add(constructor);
+            }
+
+            if (constructors.Count > 0)
+            {
+                constructors = constructors.OrderBy(x => x.GetParameters().Length).ToList();
+                potentConstructor = constructors[constructors
+                    .Select(x => x.GetParameters().Length)
+                    .ToList()
+                    .IndexOf(constructors
+                    .Select(x => x.GetParameters().Length).Max())];
+
+                return true;
+            }
+            else
+            {
+                potentConstructor = null;
+                return false;
+            }
+        }
+
+        public static bool ValidateConstructors<T>(IServiceProvider provider, out ConstructorInfo potentConstructor) where T : CommandsBase => ValidateConstructors(typeof(T), provider, out potentConstructor);
+
+        public static ConstructorInfo GetConstructorBuildData<T>(IServiceProvider provider, out object[] parameters) where T : CommandsBase => GetConstructorBuildData(typeof(T), provider, out parameters);
+
+        public static ConstructorInfo GetConstructorBuildData(Type type, IServiceProvider provider, out object[] parameters)
+        {
+            var able = ValidateConstructors(type, provider, out ConstructorInfo result);
+
+            if (able)
+            {
+                var parametersTypes = result.GetParameters().Select(x => x.ParameterType).ToArray();
+                parameters = new object[result.GetParameters().Length];
+
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    parameters[i] = provider.GetService(parametersTypes[i]);
+                }
+
+                return result;
+            }
+            else
+            {
+                parameters = new object[0];
+                return null;
+            }
+        }
 
         public static IEnumerable<Command> GetCommands(Type type)
         {
@@ -64,7 +129,7 @@ namespace Telegram.Bot.Commands.Parsers
             info = method;
         }
 
-        public bool Execute(CommandContext context)
+        public bool Execute(CommandContext context, object[] constructorParams)
         {
             try
             {
@@ -72,7 +137,7 @@ namespace Telegram.Bot.Commands.Parsers
 
                 if (declType.BaseType == typeof(CommandsBase))
                 {                    
-                    var instance = Activator.CreateInstance(declType);
+                    var instance = Activator.CreateInstance(declType, constructorParams);
 
                     var property = declType.GetProperty("Context");
 

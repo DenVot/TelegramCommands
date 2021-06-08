@@ -8,6 +8,20 @@ Extension of `Telegram.Bot` can help you to make your commands faster. New names
 
 ## Quick start
 
+Install package by 
+
+Package Manager:
+```
+Install-Package TelegramCommands -Version 1.2.0
+```
+
+.NET CLI:
+```
+dotnet add package TelegramCommands --version 1.2.0
+```
+
+**Example:**
+
 ```csharp
 using System;
 using Telegram.Bot;

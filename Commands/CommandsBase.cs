@@ -26,6 +26,7 @@ namespace Telegram.Bot.Commands
             {
                 if (MessagesInlineReplies[message.MessageId] != null)
                 {
+                    Context.ContextClient.OnInlineQuery -= ContextClient_OnInlineQuery;
                     var item = MessagesInlineReplies[message.MessageId];
                     MessagesInlineReplies.Remove(message.MessageId);
                     return item;
@@ -46,6 +47,7 @@ namespace Telegram.Bot.Commands
             {
                 if (MessagesReplies[message.MessageId] != null)
                 {
+                    Context.ContextClient.OnMessage -= ContextClient_OnMessage;
                     var item = MessagesReplies[message.MessageId];
                     MessagesReplies.Remove(message.MessageId);
                     return item;
@@ -66,6 +68,7 @@ namespace Telegram.Bot.Commands
             {
                 if (MessagesCallbacksQuery[message.MessageId] != null)
                 {
+                    Context.ContextClient.OnCallbackQuery += ContextClient_OnCallbackQuery;
                     var item = MessagesCallbacksQuery[message.MessageId];
                     MessagesCallbacksQuery.Remove(message.MessageId);
                     return item;

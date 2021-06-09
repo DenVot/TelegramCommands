@@ -30,6 +30,8 @@ namespace Telegram.Bot.Commands
 
         private readonly ITelegramBotClient client;
 
+        public IEnumerable<Command> Commands { get; private set; }
+
         /// <summary>
         /// Register commands.
         /// </summary>
@@ -38,8 +40,9 @@ namespace Telegram.Bot.Commands
         public void RegisterCommands<T>(IServiceProvider services = null, bool slash = true) where T : CommandsBase
         {
             var type = typeof(T);
-            CommandParser.GetCommandsMethods(type); //Validation of commands
-            executorType = type;            
+            Commands = CommandParser.GetCommands(type);
+            executorType = type; 
+            
             if (services == null)
                 provider = new ServiceCollection()
                     .BuildServiceProvider();
@@ -58,6 +61,9 @@ namespace Telegram.Bot.Commands
         /// </summary>        
         public async Task UploadCommandsAsync()
         {
+            if (!slashCommands)
+                throw new InvalidOperationException("If you want to upload commands, they should be slash commands!");
+
             var list = new List<BotCommand>();
 
             foreach (var command in CommandParser.GetCommands(executorType))
@@ -79,9 +85,9 @@ namespace Telegram.Bot.Commands
                 var context = new CommandContext(client, e.Message.Chat, e.Message.From, e.Message);
                 var commands = CommandParser.GetCommands(executorType);
 
-                if ((commands.Any(x => "/" + x.Name.ToLower() == e.Message.Text) && slashCommands) || (commands.Any(x => x.Name.ToLower() == e.Message.Text) && !slashCommands))
+                if ((commands.Any(x => "/" + x.Name.ToLower() == e.Message.Text) && slashCommands) || (commands.Any(x => x.Name.ToLower() == e.Message.Text.ToLower()) && !slashCommands))
                 {
-                    var command = commands.FirstOrDefault(x => "/" + x.Name.ToLower() == e.Message.Text);
+                    var command = commands.FirstOrDefault(x => (slashCommands ? "/" : null) + x.Name.ToLower() == e.Message.Text.ToLower());
                     CommandParser.GetConstructorBuildData(executorType, provider, out object[] parameters);
                     command.Execute(context, parameters);
                 }

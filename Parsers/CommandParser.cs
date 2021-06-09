@@ -108,14 +108,14 @@ namespace Telegram.Bot.Commands.Parsers
         public static IEnumerable<Command> GetCommands<T>() => GetCommands(typeof(T));
     }
 
-    internal class Command
+    public class Command
     {
         public string Name { get; }
         public string Description { get; }
 
         private readonly MethodInfo info;
 
-        public Command(MethodInfo method)
+        internal Command(MethodInfo method)
         {
             var commAttr = method.GetCustomAttribute<CommandAttribute>();
 
@@ -129,7 +129,7 @@ namespace Telegram.Bot.Commands.Parsers
             info = method;
         }
 
-        public bool Execute(CommandContext context, object[] constructorParams)
+        internal bool Execute(CommandContext context, object[] constructorParams)
         {
             try
             {

@@ -15,10 +15,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>Telegram Bot</PackageTags>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
-    <PackageReleaseNotes>Now you can use constructors with parameters.</PackageReleaseNotes>
-    <Version>1.2.0</Version>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <FileVersion>1.2.1.0</FileVersion>
+    <PackageReleaseNotes>Small bugs fixing. Service collection added.</PackageReleaseNotes>
+    <Version>1.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

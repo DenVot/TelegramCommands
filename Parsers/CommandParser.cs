@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Telegram.Bot.Attributes;
+using Telegram.Bot.Exceptions.CommandsException;
 
 namespace Telegram.Bot.Commands.Parsers
 {
@@ -23,12 +24,12 @@ namespace Telegram.Bot.Commands.Parsers
                         if (args.Length == 0)
                             yield return method;
                         else
-                            throw new InvalidOperationException($"{method} shouldn't have any arguments.");
+                            throw new InvalidMethodException(method, $"{method} mustn't have any arguments.");
                     }
                 }
             }
             else
-                throw new InvalidOperationException($"{type} not extends {typeof(CommandsBase)}.");
+                throw new ExtendException(type, typeof(CommandsBase));
         }
 
         public static IEnumerable<MethodInfo> GetCommandsMethods<T>() => GetCommandsMethods(typeof(T));
@@ -121,7 +122,7 @@ namespace Telegram.Bot.Commands.Parsers
 
             if (commAttr == null)
             {
-                throw new InvalidOperationException($"Method {method.Name} doesn't have {typeof(CommandAttribute).FullName}");
+                throw new InvalidMethodException(method, $"Method {method.Name} doesn't have {typeof(CommandAttribute).FullName}");
             }
 
             Name = commAttr.Name;

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegram.Bot.Commands
 {
@@ -11,9 +14,18 @@ namespace Telegram.Bot.Commands
     {
         public CommandContext Context { get; set; }
 
+        #region --CONTEXT--
+        protected ITelegramBotClient Client { get => Context.ContextClient; }
+        protected Chat Chat { get => Context.Chat; }
+        protected Message Message { get => Context.Message; }
+        protected User User { get => Context.User; }
+        #endregion
+
         private readonly Dictionary<int, CallbackQuery> MessagesCallbacksQuery = new Dictionary<int, CallbackQuery>();
         private readonly Dictionary<int, string> MessagesReplies = new Dictionary<int, string>();
         private readonly Dictionary<int, InlineQuery> MessagesInlineReplies = new Dictionary<int, InlineQuery>();
+
+        protected async Task<Message> ReplyAsync(string text, ParseMode mode = ParseMode.Default, IReplyMarkup replyMarkup = null) => await Context.ContextClient.SendTextMessageAsync(Context.Chat, text, mode, false, false, 0, replyMarkup);               
 
         protected InlineQuery WaitInline(Message message, TimeSpan span)
         {
@@ -68,7 +80,7 @@ namespace Telegram.Bot.Commands
             {
                 if (MessagesCallbacksQuery[message.MessageId] != null)
                 {
-                    Context.ContextClient.OnCallbackQuery += ContextClient_OnCallbackQuery;
+                    Context.ContextClient.OnCallbackQuery -= ContextClient_OnCallbackQuery;
                     var item = MessagesCallbacksQuery[message.MessageId];
                     MessagesCallbacksQuery.Remove(message.MessageId);
                     return item;

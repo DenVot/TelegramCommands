@@ -12,12 +12,12 @@ Install package by
 
 Package Manager:
 ```
-Install-Package TelegramCommands -Version 1.2.0
+Install-Package TelegramCommands -Version 1.2.1
 ```
 
 .NET CLI:
 ```
-dotnet add package TelegramCommands --version 1.2.0
+dotnet add package TelegramCommands --version 1.2.1
 ```
 
 **Example:**

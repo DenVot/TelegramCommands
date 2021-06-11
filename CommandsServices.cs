@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Telegram.Bot.Commands.Parsers;
 using Telegram.Bot.Types;
 
 namespace Telegram.Bot.Commands
@@ -13,6 +14,9 @@ namespace Telegram.Bot.Commands
     {
         private readonly List<CommandsService> Services = new List<CommandsService>();
         private readonly ITelegramBotClient client;
+
+        public delegate Task ServiceCommandExecuted(CommandsService source, bool executionResult, Command command);
+        public event ServiceCommandExecuted OnServiceCommandExecuted;
 
         /// <summary>
         /// Ininitlize new instance of <see cref="CommandsServices"/>.
@@ -35,6 +39,7 @@ namespace Telegram.Bot.Commands
 
             service.RegisterCommands<T>(provider, slash);
             Services.Add(service);
+            service.OnCommandExecuted += OnExecute;
         }
 
         /// <summary>
@@ -44,6 +49,8 @@ namespace Telegram.Bot.Commands
         public void AddService(CommandsService service)
         {
             Services.Add(service);
+
+            service.OnCommandExecuted += OnExecute;
         }
 
         /// <summary>
@@ -53,6 +60,7 @@ namespace Telegram.Bot.Commands
         public void RemoveService(CommandsService service)
         {
             Services.Remove(service);
+            service.OnCommandExecuted -= OnExecute;
         }
 
         /// <summary>
@@ -85,5 +93,11 @@ namespace Telegram.Bot.Commands
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator() => Services.GetEnumerator();
+
+        private Task OnExecute(CommandsService source, bool executionResult, Command command)
+        {
+            OnServiceCommandExecuted?.Invoke(source, executionResult, command);
+            return Task.CompletedTask;
+        }
     }
 }

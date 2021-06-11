@@ -24,6 +24,9 @@ namespace Telegram.Bot.Commands
             this.client = client;
         }
 
+        public delegate Task ExecutedHandler(CommandsService source, bool executionResult, Command command);
+        public event ExecutedHandler OnCommandExecuted;
+
         private Type executorType = null;
         private IServiceProvider provider = null;
         private bool slashCommands = true;
@@ -89,7 +92,8 @@ namespace Telegram.Bot.Commands
                 {
                     var command = commands.FirstOrDefault(x => (slashCommands ? "/" : null) + x.Name.ToLower() == e.Message.Text.ToLower());
                     CommandParser.GetConstructorBuildData(executorType, provider, out object[] parameters);
-                    command.Execute(context, parameters);
+                    
+                    OnCommandExecuted?.Invoke(this, command.Execute(context, parameters), command);
                 }
             }
         }

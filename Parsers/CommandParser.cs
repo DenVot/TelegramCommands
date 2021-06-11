@@ -107,55 +107,5 @@ namespace Telegram.Bot.Commands.Parsers
         }
 
         public static IEnumerable<Command> GetCommands<T>() => GetCommands(typeof(T));
-    }
-
-    public class Command
-    {
-        public string Name { get; }
-        public string Description { get; }
-
-        private readonly MethodInfo info;
-
-        internal Command(MethodInfo method)
-        {
-            var commAttr = method.GetCustomAttribute<CommandAttribute>();
-
-            if (commAttr == null)
-            {
-                throw new InvalidMethodException(method, $"Method {method.Name} doesn't have {typeof(CommandAttribute).FullName}");
-            }
-
-            Name = commAttr.Name;
-            Description = commAttr.Description;
-            info = method;
-        }
-
-        internal bool Execute(CommandContext context, object[] constructorParams)
-        {
-            try
-            {
-                var declType = info.DeclaringType;
-
-                if (declType.BaseType == typeof(CommandsBase))
-                {                    
-                    var instance = Activator.CreateInstance(declType, constructorParams);
-
-                    var property = declType.GetProperty("Context");
-
-                    property.SetValue(instance, context);
-
-                    info.Invoke(instance, new object[] { });                    
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-    }
+    }    
 }
